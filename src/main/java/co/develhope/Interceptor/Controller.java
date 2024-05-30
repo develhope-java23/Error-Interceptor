@@ -13,7 +13,7 @@ public class Controller {
 
     @GetMapping("/division")
     public ResponseEntity<Integer> division(@RequestParam int dividend, @RequestParam int divisor) {
-        if (dividend == 0) {
+        if (divisor == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(dividend / divisor);
