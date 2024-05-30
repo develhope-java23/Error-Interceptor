@@ -1,21 +1,37 @@
 package co.develhope.Interceptor;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/calculator")
 public class Controller {
+    @Autowired
+    private CalculatorState calculatorState;
 
-    @GetMapping("/division")
-    public ResponseEntity<Integer> division(@RequestParam int dividend, @RequestParam int divisor) {
-        if (divisor == 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    @PostMapping("/dividend")
+    public ResponseEntity<Void> setDvidend(@RequestParam int dividend) {
+        calculatorState.setDividend(dividend);
+        return ResponseEntity.accepted().build();
+    }
+
+    @PostMapping("/divisor")
+    public ResponseEntity<Void> setDivisor(@RequestParam int divisor) {
+        calculatorState.setDivisor(divisor);
+        return ResponseEntity.accepted().build();
+    }
+
+
+    @GetMapping("/result")
+    public ResponseEntity<Integer> division() {
+        try {
+            return ResponseEntity.accepted().body(calculatorState.performDivision());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+
+
         }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(dividend / divisor);
     }
 }
